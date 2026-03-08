@@ -1,29 +1,110 @@
-# Create T3 App
+# ts-clean-architecture
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Учебный проект по чистой архитектуре для TypeScript-приложений 🧩
 
-## What's next? How do I make an app with this?
+`ts-clean-architecture` показывает, как организовать `Next.js`-приложение так, чтобы бизнес-логика была отделена от UI, хранилища, транспорта и конкретных библиотек. Проект построен вокруг принципов `Clean Architecture` и демонстрирует разделение на слои: `entities`, `use-cases`, `controllers`, `infrastructure`, `frameworks` и `di`.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Что демонстрирует проект
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Разделение бизнес-логики и инфраструктурного кода.
+- Dependency Injection через `tsyringe`.
+- Use case-подход для прикладных сценариев.
+- Валидацию входных данных через `zod`.
+- Изоляцию репозиториев, сервисов, контроллеров и framework-адаптеров.
+- Пример авторизации в веб-приложении на `Next.js`.
+- Базовый пример тестирования сервисного слоя.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Архитектурные слои
 
-## Learn More
+В проекте используется следующая структура:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- `core/entities` - доменные модели, ошибки, value wrappers и вспомогательные сущности.
+- `core/application` - интерфейсы сервисов и репозиториев.
+- `core/use-cases` - прикладные сценарии, которыми пользуется приложение.
+- `core/controllers` - слой обработки входных данных и orchestration.
+- `core/infrastructure` - реализации репозиториев и сервисов.
+- `core/frameworks` - адаптеры под конкретные технологии, например cookies и логгер.
+- `core/di` - регистрация зависимостей и сборка контейнера.
+- `src/app` - web-слой и страницы `Next.js`.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Возможности
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- Авторизация пользователя через выделенный use case.
+- Проверка текущего пользователя через `checkAuthUseCase`.
+- Выход из системы через отдельный сценарий.
+- Работа с access token через cookie storage.
+- Middleware-проверка маршрутов авторизации.
+- Возможность расширять проект новыми сущностями без смешивания слоёв.
 
-## How do I deploy this?
+## Технологии
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- `Next.js 15`
+- `React 19`
+- `TypeScript`
+- `Tailwind CSS`
+- `HeroUI`
+- `Zod`
+- `Axios`
+- `axios-cache-interceptor`
+- `TanStack Query`
+- `tsyringe`
+- `Vitest`
+- `js-cookie`
+- `reflect-metadata`
+
+## Быстрый старт
+
+### 1. Установка зависимостей
+
+```bash
+npm install
+```
+
+### 2. Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу:
+
+```text
+http://localhost:3000
+```
+
+## Структура проекта
+
+```text
+core/
+  application/      # интерфейсы сервисов и репозиториев
+  controllers/      # контроллеры прикладных сценариев
+  di/               # dependency injection контейнер и связи слоев
+  entities/         # доменные сущности, ошибки, вспомогательные типы
+  frameworks/       # адаптеры под конкретные технологии
+  infrastructure/   # реализации репозиториев и сервисов
+  use-cases/        # прикладные сценарии
+
+src/
+  app/              # страницы и UI-слой Next.js
+  styles/           # стили приложения
+  utils/            # вспомогательные утилиты
+```
+
+## Как это работает
+
+- `core/di/container.ts` собирает зависимости и связывает слои через DI-контейнер.
+- `core/use-cases/auth.use-case.ts` предоставляет прикладные сценарии авторизации.
+- `core/controllers/sign-in.controller.ts` валидирует входные данные перед передачей в сервис.
+- `core/infrastructure/services/authentication.service.ts` инкапсулирует логику входа, выхода, обновления токена и получения пользователя.
+- `core/frameworks/auth-storage/web.ts` отвечает за хранение access token в cookies.
+- `src/middleware.ts` обрабатывает поведение маршрутов авторизации.
+
+## Для чего этот проект полезен
+
+Проект подойдет, если ты хочешь:
+
+- разобраться, как применять `Clean Architecture` в `TypeScript`;
+- увидеть пример DI в frontend/fullstack-проекте;
+- отделить бизнес-логику от `React` и `Next.js`;
+- использовать use cases и интерфейсы вместо прямой привязки к UI;
+- получить учебный шаблон для масштабируемого приложения.
